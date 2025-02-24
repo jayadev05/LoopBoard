@@ -1,5 +1,4 @@
 import { DottedSeparator } from "@/components/dotted-separator";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,14 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import React, { useState } from "react";
+
+import React from "react";
 import Link from "next/link";
-import { Label } from "@/components/ui/label";
+
 import { OAuthButtons } from "./shared/OAuthButtons";
-import { Eye, EyeOff } from "lucide-react";
+
 import SingUpForm from "./Sing-Up-Form";
 
 export function SignUpCard() {

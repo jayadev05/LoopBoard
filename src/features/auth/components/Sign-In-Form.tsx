@@ -1,65 +1,96 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Eye, EyeOff } from 'lucide-react';
-import React, { useState } from 'react'
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff } from "lucide-react";
+import React, { useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
-export default function SingInForm() {
+const formSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Minimum 8 characters required"),
+});
 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-      });
-    
-      const [showPassword, setShowPassword] = useState(false);
-    
-      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-      };
+export function SignInForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (values:z.infer<typeof formSchema>) => {
+    console.log(values);
+    // Add authentication logic here
+  };
 
   return (
-    <form className="space-y-4">
-    
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          name="email"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor="email" className="sr-only">Email</Label>
+              <FormControl>
+                <Input
+                  id="email"
+                  {...field}
+                  type="email"
+                  placeholder="Enter your email address"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="input-group">
-            <Label className="sr-only" htmlFor='email'>Email :</Label>
-            <Input
-              required
-              type="email"
-              id='email'
-              name="email"
-              value={formData?.email}
-              onChange={(e) => handleInputChange(e)}
-              placeholder="Enter your email adress"
-              disabled={false}
-            />
-          </div>
+        <FormField
+          name="password"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor="password" className="sr-only">Password</Label>
+              <div className="relative w-full">
+                <FormControl>
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className="pr-10 w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="input-group relative w-full">
-            <Label htmlFor="password" className="sr-only">
-              Password:
-            </Label>
-            <Input
-              id="password"
-              required
-              type={showPassword ? "text" : "password"} // Toggle type
-              name="password"
-              placeholder="Enter your password"
-              className="pr-10 w-full"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-
-          <Button size="lg" disabled={false} className="w-full">
-            Sign In
-          </Button>
-        </form>
-  )
+        <Button type="submit" size="lg" className="w-full">
+          Sign In
+        </Button>
+      </form>
+    </Form>
+  );
 }

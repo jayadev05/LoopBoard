@@ -1,11 +1,17 @@
+
+
 import { AuthPageHeader } from '@/components/layout/header/AuthPageHeader'
+import { db } from '@/db/drizzle'
+import { users } from '@/db/schema'
 import React from 'react'
 
 interface AuthLayoutProps {
     children :React.ReactNode
 }
 
-export default function AuthLayout({children}:AuthLayoutProps) {
+export default async function AuthLayout({children}:AuthLayoutProps) {
+
+
   return (
     <main className='bg-neutral-100 dark:bg-gray-800 min-h-screen'>
    

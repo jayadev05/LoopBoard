@@ -13,26 +13,27 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { loginSchema } from "../Schemas";
+import { useLogin } from "../api/use-login";
 
-const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Minimum 8 characters required"),
-});
+
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const {mutate}=useLogin();
   
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (values:z.infer<typeof formSchema>) => {
-    console.log(values);
-    // Add authentication logic here
+  const onSubmit = (values:z.infer<typeof loginSchema>) => {
+    mutate({
+      json:values
+    })
   };
 
   return (

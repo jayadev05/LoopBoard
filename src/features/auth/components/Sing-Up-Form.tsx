@@ -13,23 +13,19 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { registerSchema } from "../Schemas";
+import { useRegister } from "../api/use-register";
 
-const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Minimum 8 characters required"),
-  confirmPassword: z.string().min(8, "Minimum 8 characters required"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const {mutate} = useRegister();
+
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -38,9 +34,10 @@ export default function SignUpForm() {
     },
   });
 
-  const onSubmit = (values:z.infer<typeof formSchema>) => {
-    console.log(values);
-    // Add registration logic here
+  const onSubmit = (values:z.infer<typeof registerSchema>) => {
+    mutate({
+      json:values
+    });
   };
 
   return (

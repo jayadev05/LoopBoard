@@ -1,8 +1,18 @@
+'use client';
+
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react'
 
+
 export  function AuthPageHeader() {
+
+  
+  const pathname = usePathname();
+  const isSignIn = pathname === '/sign-in';
+
   return (
    <nav className='flex justify-between items-center'>
 
@@ -17,7 +27,10 @@ export  function AuthPageHeader() {
         <h1 className='text-lg font-bold'>LoopBoard</h1>
     </div>
 
-    <Button variant='secondary'>Sign Up</Button>
+    <Link href={isSignIn ? '/sign-up' : '/sign-in'}>
+     <Button variant='secondary'>{isSignIn ? 'Sign Up' : 'Login'}</Button>
+    </Link>
+    
 
     
    </nav>

@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 
 import "../styles/globals.css";
-import { QueryProvider } from "@/components/provider/query-provider";
+import { QueryProvider } from "@/components/provider/QueryProvider";
+import AuthProvider from "@/components/provider/AuthProvider";
 
 
 const inter = Inter({
@@ -22,7 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <AuthProvider>
+      <html lang="en">
       <body
         className={cn(inter.className,'antialiased min-h-screen')}
       >
@@ -32,5 +34,7 @@ export default function RootLayout({
        
       </body>
     </html>
+    </AuthProvider>
+    
   );
 }

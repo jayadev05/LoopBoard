@@ -20,7 +20,7 @@ import { useLogin } from "../api/use-login";
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const {mutate}=useLogin();
+  const {mutate,isPending}= useLogin();
   
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -89,7 +89,7 @@ export function SignInForm() {
         />
 
         <Button type="submit" size="lg" className="w-full">
-          Sign In
+        {isPending ? "Signing In..." : "Sign In"}
         </Button>
       </form>
     </Form>

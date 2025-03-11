@@ -1,4 +1,4 @@
-'use client';
+
 
 import { SignInCard } from '@/features/auth/components/Sign-In-Card'
 import React from 'react'

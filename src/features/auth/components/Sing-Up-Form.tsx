@@ -13,8 +13,10 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { registerSchema } from "../Schemas";
-import { useRegister } from "../api/use-register";
+import { registerSchema } from "../schemas";
+import { useRegister } from "../hooks/use-register";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 
 
@@ -22,7 +24,8 @@ export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const {mutate} = useRegister();
+  const {mutate,isPending} = useRegister();
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(registerSchema),
@@ -37,7 +40,7 @@ export default function SignUpForm() {
   const onSubmit = (values:z.infer<typeof registerSchema>) => {
     mutate({
       json:values
-    });
+    });;
   };
 
   return (
@@ -141,7 +144,7 @@ export default function SignUpForm() {
           )}
         />
 
-        <Button type="submit" size="lg" className="w-full">
+        <Button disabled={isPending} type="submit" size="lg" className="w-full">
           Sign Up
         </Button>
       </form>

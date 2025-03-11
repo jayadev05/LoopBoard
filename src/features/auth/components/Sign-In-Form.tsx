@@ -13,14 +13,20 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { loginSchema } from "../Schemas";
-import { useLogin } from "../api/use-login";
+import { loginSchema } from "../schemas";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useLogin } from "../hooks/use-login";
+
 
 
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const {mutate,isPending}= useLogin();
+ 
+ 
+
+  const {mutate,isPending} = useLogin();
   
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -30,10 +36,10 @@ export function SignInForm() {
     },
   });
 
-  const onSubmit = (values:z.infer<typeof loginSchema>) => {
-    mutate({
-      json:values
-    })
+  const onSubmit = async (values:z.infer<typeof loginSchema>) => {
+ 
+    mutate( { json: values } );
+
   };
 
   return (
@@ -88,8 +94,8 @@ export function SignInForm() {
           )}
         />
 
-        <Button type="submit" size="lg" className="w-full">
-        {isPending ? "Signing In..." : "Sign In"}
+        <Button disabled={isPending} type="submit" size="lg" className="w-full">
+           Sign In
         </Button>
       </form>
     </Form>

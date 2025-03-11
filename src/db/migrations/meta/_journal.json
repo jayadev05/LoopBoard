@@ -5,15 +5,50 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1740661146919,
-      "tag": "0000_faulty_stardust",
+      "when": 1741195304746,
+      "tag": "0000_lame_omega_flight",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1740662080442,
-      "tag": "0001_messy_talos",
+      "when": 1741234252335,
+      "tag": "0001_lazy_white_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741464017336,
+      "tag": "0002_normal_stick",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1741639590268,
+      "tag": "0003_overconfident_lyja",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1741641064919,
+      "tag": "0004_careful_adam_destine",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1741647979285,
+      "tag": "0005_curvy_george_stacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1741648048521,
+      "tag": "0006_daily_black_panther",
       "breakpoints": true
     }
   ]

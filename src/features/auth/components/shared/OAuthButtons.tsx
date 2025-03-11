@@ -25,12 +25,12 @@ export function OAuthButtons({ type = "login" }: OAuthButtonProps) {
   return (
     <CardContent className="p-7 flex flex-col gap-y-4 ">
 
-      <Button onClick={()=> handleLogin('google')} disabled={false} variant="secondary" size="lg" className="w-full">
+      <Button disabled={false} onClick={()=> handleLogin('google')}  variant="secondary" size="lg" className="w-full">
         <FcGoogle />
         {action} with Google
       </Button>
 
-      <Button onClick={()=> handleLogin('github')} disabled={false} variant="secondary" size="lg" className="w-full">
+      <Button disabled={false} onClick={()=> handleLogin('github')}  variant="secondary" size="lg" className="w-full">
         <FaGithub />
         {action} with Github
       </Button>

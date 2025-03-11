@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Toaster } from 'react-hot-toast';
+
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import "../styles/globals.css";
 import { QueryProvider } from "@/components/provider/QueryProvider";
@@ -29,7 +32,10 @@ export default function RootLayout({
         className={cn(inter.className,'antialiased min-h-screen')}
       >
         <QueryProvider>
-         {children}
+          <NuqsAdapter>
+          {children}
+          </NuqsAdapter>
+         <Toaster position="top-right" />
         </QueryProvider>
        
       </body>

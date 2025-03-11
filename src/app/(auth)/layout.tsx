@@ -1,8 +1,6 @@
 
 
 import { AuthPageHeader } from '@/components/layout/header/AuthPageHeader'
-import { db } from '@/db/drizzle'
-import { users } from '@/db/schema'
 import React from 'react'
 
 interface AuthLayoutProps {

@@ -14,7 +14,7 @@ export function SignOutButton() {
 
       // Then sign out of NextAuth session
       await signOut({ 
-        callbackUrl: '/sign-in', 
+        callbackUrl: '/login', 
         redirect: true 
       });
     } catch (error) {

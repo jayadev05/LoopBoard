@@ -23,6 +23,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
   
   try {
     const user = JSON.parse(userHeader);
+    console.log('user parsed and passed on to next req',user);
     c.set("user", user); // Attach user object to request context
     
     await next();

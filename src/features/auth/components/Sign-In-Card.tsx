@@ -42,7 +42,7 @@ export   function SignInCard() {
       <CardContent className="p-7 flex items-center justify-center">
       <p className="text-sm text-gray-500">
                 Don't have an account? 
-              <Link href={'/sign-up'}>
+              <Link href={'/register'}>
                 <span className="text-blue-700 ">&nbsp;Sign Up</span>
               </Link>
               </p>

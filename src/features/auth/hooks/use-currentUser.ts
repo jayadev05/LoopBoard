@@ -1,38 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
+import { InferResponseType } from "hono";
+import { User } from "@/types/auth";
 
 
-type ResponseType = 
-   { message: string }
-  | { error: string }
-  | { 
-      user: { 
-        id: string; 
-        name: string | null; 
-        email: string; 
-        emailVerified: string | null; 
-        role: string; 
-        image: string | null; 
-        password: string | null; 
-        createdAt: string; 
-        updatedAt: string; 
-      }
-    };
+interface CurrentUserResponse {
+  error: string | null;
+  data: User | null;
+  message?: string;
+}
+
 
 export const useCurrentUser = () => {
-  return useQuery<ResponseType, Error>({
+  return useQuery<CurrentUserResponse, Error>({
     queryKey: ["currentUser"],
     queryFn: async () => {
       const response = await client.api.customAuth["current-user"].$get();
       
       if (!response.ok) {
-        return { message: "Failed to fetch user" };
-      } 
+        // Return a properly shaped error response
+        return { error: "Failed to fetch user", data: null };
+      }
+      
       const user = await response.json();
-
-      return user;
+      
+      return user as CurrentUserResponse;
     },
     staleTime: 1000 * 60 * 5, // Cache user data for 5 minutes
-   
   });
 };

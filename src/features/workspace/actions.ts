@@ -2,6 +2,7 @@
 import { db } from '@/db/drizzle';
 import { workspaceMembers, workspaces } from '@/db/schema';
 import { eq, inArray } from 'drizzle-orm'; 
+import { getCurrentUser } from '../auth/actions';
 
 export async function getWorkspacesByUserId(userId:string) {
   if (!userId) {
@@ -24,4 +25,16 @@ export async function getWorkspacesByUserId(userId:string) {
     .where(inArray(workspaces.id, workspaceIds));
     
   return userWorkspaces;
+}
+
+export async function getWorkspaceById(workspaceId:string){
+
+  const workSpaces = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.id, workspaceId));
+
+  if(workSpaces.length===0) return null;
+  
+  return workSpaces[0];
 }

@@ -4,7 +4,7 @@ import { MobileSidebar } from '../sidebar/MobileSidebar'
 
 export  function DashboardHeader() {
   return (
-   <nav className='pt-4 px-6 flex items-center justify-between '>
+   <nav className='pt-2 px-6 flex items-center justify-between '>
 
     <div className=' flex-col hidden lg:flex'>
 

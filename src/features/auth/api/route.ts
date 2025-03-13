@@ -13,27 +13,27 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const app = new Hono()
 
-.get('/current-user',async(c)=>{
-
-  const  nextAuthsession= await getServerSession(authOptions);
+.get('/current-user', async (c) => {
+  const nextAuthsession = await getServerSession(authOptions);
   const session = await getSession();
   
-  const activeSession  = nextAuthsession || session;
-
-  if(!activeSession) return c.json({message:'session not found'},404);
-
-  const userId = activeSession.user.id;
-
-  const user = await db.query.users.findFirst({
-    where: eq(users.id,userId),
-  });
-
-  if (!user) {
-    return c.json({ error: "User not found" }, 404);
+  const activeSession = nextAuthsession || session;
+  
+  if (!activeSession) {
+    return c.json({ error: "Session not found", data: null }, 404);
   }
-
-  return c.json({ user });
-
+  
+  const userId = activeSession.user.id;
+  
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
+  
+  if (!user) {
+    return c.json({ error: "User not found", data: null }, 404);
+  }
+  
+  return c.json({ error: null, data: user });
 })
 
 .post("/login", zValidator("json", loginSchema), async (c) => {

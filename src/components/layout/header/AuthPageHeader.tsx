@@ -11,7 +11,7 @@ export  function AuthPageHeader() {
 
   
   const pathname = usePathname();
-  const isSignIn = pathname === '/sign-in';
+  const isSignIn = pathname === '/login';
 
   return (
    <nav className='flex justify-between items-center'>
@@ -27,7 +27,7 @@ export  function AuthPageHeader() {
         <h1 className='text-lg font-bold'>LoopBoard</h1>
     </div>
 
-    <Link href={isSignIn ? '/sign-up' : '/sign-in'}>
+    <Link href={isSignIn ? '/register' : '/login'}>
      <Button variant='secondary'>{isSignIn ? 'Sign Up' : 'Login'}</Button>
     </Link>
     

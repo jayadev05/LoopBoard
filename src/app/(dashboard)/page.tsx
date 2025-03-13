@@ -1,24 +1,20 @@
 
-import {  getServerSession } from 'next-auth';
-import React from 'react'
-import { authOptions } from '../api/auth/[...nextauth]/route';
-import { getSession, getSessionUser, } from '@/lib/session';
 import { getWorkspacesByUserId } from '@/features/workspace/actions';
 import { redirect } from 'next/navigation';
-
-
-
+import { getCurrentUser } from '@/features/auth/actions';
+import { Workspace } from '@/types/workspace';
 
 export default  async function Home() {
 
-  const  nextAuthsession= await getServerSession(authOptions);
-  const session = await getSession();
 
-  const activeSession  = nextAuthsession || session;
+  const response = await getCurrentUser();
 
-  const user = await getSessionUser(activeSession!);
+  let workspaces:Workspace[]=[];
 
-  const workspaces = await getWorkspacesByUserId(user!.id);
+  if(response.data ){
+     workspaces = await getWorkspacesByUserId(response.data.id);
+  }
+ 
 
   if(workspaces.length===0){
     redirect('/workspaces/create')

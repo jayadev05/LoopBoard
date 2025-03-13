@@ -25,11 +25,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <AuthProvider>
       <html lang="en">
       <body
-        className={cn(inter.className,'antialiased min-h-screen')}
+        className={cn(inter.className,'antialiased min-h-screen dark:bg-[#212121]')}
       >
         <QueryProvider>
           <NuqsAdapter>

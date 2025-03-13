@@ -1,8 +1,8 @@
 
 export const AUTH_ROUTES = {
     protected: new Set(["/"] as const),
-    public: new Set(["/sign-in", "/sign-up"] as const),
-    signIn: "/sign-in" as const,
+    public: new Set(["/login", "/register"] as const),
+    signIn: "/login" as const,
     home: "/" as const,
   };
   

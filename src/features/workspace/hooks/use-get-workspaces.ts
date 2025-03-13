@@ -1,14 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 import { InferResponseType } from "hono";
+import { Workspace } from "@/types/workspace";
 
-// Define workspace type explicitly
-export type Workspace = {
-  id: string;
-  name: string;
-  imageUrl: string | null;
-  
-};
 
 type ResponseType = Workspace[];
 

@@ -20,7 +20,7 @@ export const useRegister =()=>{
         }  ,
         onSuccess:()=>{
             toast.success('User registered successfully');
-            router.push('/sign-in');
+            router.push('/login');
             queryClient.invalidateQueries({queryKey:['currentUser']});
         },
         onError:()=>{

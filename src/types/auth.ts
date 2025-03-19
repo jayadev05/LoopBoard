@@ -4,7 +4,8 @@ import { User as NextAuthUser } from "next-auth";
 export type CustomSessionUser = {
     id: string;
     role: string;
-    email:string
+    email:string;
+    isNextAuthLoggedIn?: boolean
   
   };
   

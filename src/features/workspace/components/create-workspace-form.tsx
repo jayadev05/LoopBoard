@@ -130,15 +130,40 @@ export  function CreateWorkspaceForm({onCancel}:CreateWorkspaceFormProps) {
                             disabled={isPending}
                             onChange={handleImageChange}
                             />
-                            <Button 
-                            type='button' 
-                            variant='tertiary'
-                            disabled={isPending}
-                            className='w-fit mt-2'
-                             size='xs'
-                             onClick={()=> inputRef.current?.click()}
-                             >Upload Image
-                             </Button>
+
+                            {field.value ?
+                             (
+                                <Button 
+                                type='button' 
+                                variant='destructive'
+                                disabled={isPending}
+                                className='w-fit mt-2'
+                                 size='xs'
+                                 onClick={()=> {
+                                    field.onChange(null);
+                                    if(inputRef.current){
+                                        inputRef.current.value = '';
+                                    }
+
+                                 }}
+                                 >Remove Image
+                                 </Button>
+                             )
+                              :
+                              (
+                                <Button 
+                                type='button' 
+                                variant='tertiary'
+                                disabled={isPending}
+                                className='w-fit mt-2'
+                                 size='xs'
+                                 onClick={()=> inputRef.current?.click()}
+                                 >Upload Image
+                                 </Button>
+                              )
+                              }
+                         
+
                            </div>
                         </div>
                     </div>

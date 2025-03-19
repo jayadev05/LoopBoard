@@ -47,9 +47,38 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   
   
   // Extract user from cookies
-  const user = await extractUserFromCookies(req.cookies);
+  let user = await extractUserFromCookies(req.cookies);
   
-
+  if (user?.isNextAuthLoggedIn) {
+    try {
+      // Include cookies in the fetch request
+      const sessionRes = await fetch(new URL('/api/auth/session', req.url), {
+        headers: {
+          cookie: req.headers.get('cookie') || ''
+        }
+      });
+      
+      if (sessionRes.ok) {
+        const session = await sessionRes.json();
+        
+        if (session && session.user) {
+          // Update user object with actual user data
+          user = {
+            ...user,
+            id: session.user.id,
+            email: session.user.email,
+            name: session.user.name,
+          };
+        } else {
+          console.log('Session received but no user data found:', session);
+        }
+      } else {
+        console.log('Session fetch failed with status:', sessionRes.status);
+      }
+    } catch (error) {
+      console.error('Error fetching session:', error);
+    }
+  }
   
   // Handle protected routes
   if (isProtectedRoute && !user) {
@@ -63,6 +92,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   
   // Pass user data via request headers if user exists
   if (user) {
+    console.log('user :', user);
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("x-user", JSON.stringify(user));
     

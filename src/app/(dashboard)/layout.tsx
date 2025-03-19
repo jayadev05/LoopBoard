@@ -1,5 +1,6 @@
 import { DashboardHeader } from '@/components/layout/header/DashboardHeader'
 import { Sidebar } from '@/components/layout/sidebar/Sidebar'
+import { CreateProjectModal } from '@/features/projects/components/create-project-modal'
 import { CreateWorkspaceModal } from '@/features/workspace/components/create-workspace-modal'
 import React from 'react'
 
@@ -11,6 +12,7 @@ export default function DashboardLayout({children}:DashboardLayoutProps) {
   return (
     <div className='min-h-screen '>
         <CreateWorkspaceModal/>
+        <CreateProjectModal/>
         <div className="flex w-full h-full ">
 
             <div className='fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto '>

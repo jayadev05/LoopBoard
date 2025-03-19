@@ -15,13 +15,8 @@ import { User } from "@/types/auth";
 import { getMember } from "@/features/members/utils";
 
 type Variables = {
-  user:
-    | {
-        id: string;
-        isNextAuthLoggedIn?: boolean;
-        [key: string]: any;
-      }
-    | undefined;
+  user:User | null
+   
 };
 
 const app = new Hono<{ Variables: Variables }>()
@@ -132,5 +127,77 @@ const app = new Hono<{ Variables: Variables }>()
 
 
   })
+
+  .delete('/:workspaceId',async(c)=>{
+      const user = c.get('user');
+      const {workspaceId} = c.req.param();
+      
+      if (!workspaceId) {
+        return c.json({ error: "Workspace ID is required" }, 400);
+      }
+
+      const member = await getMember({workspaceId,userId:user!.id});
+
+      if(!member || member.role !== MemberRole.ADMIN) {
+        return c.json({error:'Unauthorized'},401)
+      };
+
+      await db.delete(workspaces).where(eq(workspaces.id, workspaceId));
+
+      //Todo: delete members and tasks
+
+      return c.json({data:{id:workspaceId}});
+  })
+
+  .post('/:workspaceId/reset-invite-code',async(c)=>{
+    const user = c.get('user');
+    const {workspaceId} = c.req.param();
+
+    if (!workspaceId) {
+      return c.json({ error: "Workspace ID is required" }, 400);
+    }
+
+    const member = await getMember({workspaceId,userId:user!.id});
+
+    if(!member || member.role !== MemberRole.ADMIN) {
+      return c.json({error:'Unauthorized'},401)
+    };
+
+    const workspace = await db.update(workspaces)
+     .set({inviteCode:generateInviteCode(6)})
+     .where(eq(workspaces.id, workspaceId))
+     .returning();
+
+    return c.json({data:workspace},200);
+})
+
+  .post('/:workspaceId/join',zValidator('json',z.object({code:z.string()})), async(c)=>{
+
+      const user = c.get('user');
+      const {workspaceId} = c.req.param();
+      const {code} = c.req.valid('json');
+
+      const member = await getMember({workspaceId,userId:user!.id});
+
+      if(member){
+        return c.json({error:"Already a member"},400)
+      }
+
+      const workspace = await db.select().from(workspaces).where(eq(workspaces.id, workspaceId));
+
+      if(!workspace || !workspace[0].inviteCode || workspace[0].inviteCode !==code ){
+        return c.json({error:"Invalid invite code"},400)
+      }
+
+      await db.insert(workspaceMembers).values({
+        workspaceId:workspaceId,
+        userId:user!.id,
+        role:MemberRole.MEMBER
+      });
+
+      return c.json({message:"Joined the workspace",data:workspace?.[0]},200);
+
+
+})
 
 export default app;

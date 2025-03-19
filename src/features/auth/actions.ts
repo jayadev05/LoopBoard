@@ -1,4 +1,4 @@
-// lib/auth-actions.ts
+
 import { getServerSession } from 'next-auth';
 
 import { getSession } from '@/lib/session';

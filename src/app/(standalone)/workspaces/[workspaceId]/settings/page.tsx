@@ -15,15 +15,19 @@ export default async function WorkspaceSettingsPage({params}:WorkspaceSettingsPa
 
     const user = await getCurrentUser();
     if(!user) redirect('/login');
+
   
- 
-    const workspace = await getWorkspaceById(params.workspaceId);
+    const workspaceId = params.workspaceId;
+
+    if(!workspaceId) redirect('/');
+
+    const workspace = await getWorkspaceById(workspaceId);
    
 
-    if(!workspace) redirect(`/workspaces/${params.workspaceId}`);
+    if(!workspace) redirect(`/workspaces/${workspaceId}`);
 
   return (
-    <div className='w-full lg:max-w-xl'>
+    <div className='w-full '>
            <EditWorkspaceForm initialValues={workspace}/>
     </div>
   )

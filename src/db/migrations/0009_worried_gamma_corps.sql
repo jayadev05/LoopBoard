@@ -1,0 +1,2 @@
+ALTER TABLE "workspace_member" DROP CONSTRAINT "workspace_member_workspaceId_userId_pk";--> statement-breakpoint
+ALTER TABLE "workspace_member" ADD COLUMN "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL;

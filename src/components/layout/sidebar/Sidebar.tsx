@@ -5,6 +5,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Navigation } from './Navigation'
 import { WorkspaceSwitcher } from './WorkspaceSwitcher'
+import { Projects } from './Projects'
 
 export  function Sidebar() {
   return (
@@ -24,6 +25,8 @@ export  function Sidebar() {
             <DottedSeparator className='my-4'/>
 
             <Navigation/>
+            <DottedSeparator className='my-4'/>
+            <Projects/>
     </aside>
   )
 }

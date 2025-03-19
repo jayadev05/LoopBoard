@@ -82,21 +82,33 @@ import {
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     imageUrl: varchar("imageUrl", { length: 255 }) ,
-    inviteCode:varchar('inviteCode',{length:10}).notNull()
+    inviteCode:varchar('inviteCode',{length:10}).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(), 
+  updatedAt: timestamp("updated_at").defaultNow().notNull(), 
   });
   
-  export const workspaceMembers = pgTable("workspace_members", {
+  export const workspaceMembers = pgTable("workspace_member", {
+    id: uuid("id").primaryKey().defaultRandom(), // Add a unique ID
     workspaceId: uuid("workspaceId")
       .notNull()
       .references(() => workspaces.id, { onDelete: "cascade" }), 
     userId: uuid("userId")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-      role: roleEnum("role").notNull().default("MEMBER"),
-      
-  }, (table) => {
-    return {
-      compositeKey: primaryKey({ columns: [table.workspaceId, table.userId] }) 
-    };
+      .references(() => users.id, { onDelete: "set null" }),
+    role: roleEnum("role").notNull().default("MEMBER"),
+    createdAt: timestamp("created_at").defaultNow().notNull(), 
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  });
+  
+
+  export const projects = pgTable('project', { 
+    id: uuid("id").primaryKey().defaultRandom(), 
+    name: varchar('name', { length: 255 }).notNull(),
+    workspaceId: uuid("workspaceId")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    imageUrl: varchar("imageUrl", { length: 255 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(), 
   });
   

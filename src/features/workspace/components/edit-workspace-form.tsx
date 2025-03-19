@@ -13,10 +13,15 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ImageIcon } from 'lucide-react';
+import { CopyIcon, ImageIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Workspace } from '@/types/workspace';
+import { useConfirm } from '@/hooks/use-confirm';
+import { useDeleteWorkspace } from '../hooks/use-delete-workspace';
+import toast from 'react-hot-toast';
+import { useResetInviteCode } from '../hooks/use-reset-invite-code';
+
 
 interface EditWorkspaceFormProps{
     onCancel ?: ()=>void;
@@ -30,7 +35,22 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
 
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const {mutate,isPending} = useUpdateWorkspace();
+    const {mutate:updateWorkspace,isPending} = useUpdateWorkspace();
+    const {mutate:deleteWorkspace,isPending:isDeletingWorkspace} = useDeleteWorkspace();
+    const {mutate:resetInviteLink,isPending:isResetingInviteLink} = useResetInviteCode();
+
+
+
+    const [DeleteModal,confirmDelete] = useConfirm({
+        title:"Delete Workspace",
+        message:"Are you sure you want to delete this workspace?",
+        variant:'destructive'
+      });
+    const [ResetLinkModal,confirmResetLink] = useConfirm({
+        title:"Reset Invite Link",
+        message:"This will invalidate the current invite link",
+        variant:'destructive'
+      });
 
     const form = useForm({
         resolver:zodResolver<z.infer<typeof updateWorkspaceSchema>>(updateWorkspaceSchema),
@@ -41,7 +61,7 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
     });
 
     const onSubmit =(values:z.infer<typeof updateWorkspaceSchema>)=>{
-        mutate({
+        updateWorkspace({
             form:values,
             param:{workspaceId:initialValues.id}
         },
@@ -62,9 +82,58 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
         }
     }
 
+    const handleDelete= async()=>{
+        const ok = await confirmDelete();
+
+        if(!ok) return ;
+
+        deleteWorkspace({
+            param:{
+                workspaceId:initialValues.id
+            }
+        },
+        {
+            onSuccess:()=>  window.location.href='/'
+        }
+        )
+        
+    
+    }
+
+    const handleCopyInviteLink=()=>{
+        navigator.clipboard.writeText(fullInvitelink)
+        .then(()=>toast.success('link copied to clipboard'));
+
+        
+    }
+
+    const handleLinkReset =async()=>{
+
+        const ok = await confirmResetLink();
+
+        if(!ok) return ;
+
+        resetInviteLink({
+            param:{
+                workspaceId:initialValues.id
+            }
+        },{
+            onSuccess:()=>{
+                router.refresh();
+            }
+        })
+    }
+
+    const fullInvitelink =`${window.location.origin}/workspaces/${initialValues.id}/join/${initialValues.inviteCode}`
+
 
   return (
-    <Card className='w-full h-full border-none shadow-none dark:bg-neutral-900' >
+    <div className="flex flex-col gap-y-4">
+
+        <DeleteModal/>
+        <ResetLinkModal/>
+
+          <Card className='w-full h-full border-none shadow-none dark:bg-neutral-900' >
         <CardHeader className='flex p-7'>
             <CardTitle className='text-xl font-bold'>
                 {initialValues.name}
@@ -136,15 +205,37 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
                             disabled={isPending}
                             onChange={handleImageChange}
                             />
-                            <Button 
-                            type='button' 
-                            variant='tertiary'
-                            disabled={isPending}
-                            className='w-fit mt-2'
-                             size='xs'
-                             onClick={()=> inputRef.current?.click()}
-                             >Upload Image
-                             </Button>
+                            {field.value ?
+                                                         (
+                                                            <Button 
+                                                            type='button' 
+                                                            variant='destructive'
+                                                            disabled={isPending}
+                                                            className='w-fit mt-2'
+                                                             size='xs'
+                                                             onClick={()=> {
+                                                                field.onChange(null);
+                                                                if(inputRef.current){
+                                                                    inputRef.current.value = '';
+                                                                }
+                            
+                                                             }}
+                                                             >Remove Image
+                                                             </Button>
+                                                         )
+                                                          :
+                                                          (
+                                                            <Button 
+                                                            type='button' 
+                                                            variant='tertiary'
+                                                            disabled={isPending}
+                                                            className='w-fit mt-2'
+                                                             size='xs'
+                                                             onClick={()=> inputRef.current?.click()}
+                                                             >Upload Image
+                                                             </Button>
+                                                          )
+                                                          }
                            </div>
                         </div>
                     </div>
@@ -173,6 +264,62 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
                 </form>
             </Form>
         </CardContent>
-    </Card>
+         </Card>
+
+         <Card className='w-full h-full border-none shadow-none dark:bg-neutral-900'>
+                    <CardContent className='p-7'>
+                        <div className="flex flex-col">
+                            <h3 className='font-bold'>Invite Members</h3>
+                            <p className='text-muted-foreground text-sm'> 
+                               Use the inviet link to add members to your workspace.   
+                            </p>
+                            <div className='mt-4'>
+                                <div className='flex items-center gap-x-2'>
+                                    <Input disabled value={fullInvitelink}/>
+                                    <Button
+                                    className='size-12'
+                                    variant='secondary'
+                                    onClick={handleCopyInviteLink}
+                                    >
+                                      <CopyIcon className='size-5'/>
+                                    </Button>
+                                </div>
+                            </div>
+                            <DottedSeparator className='py-7'/>
+                            <Button 
+                            className='mt-6 w-fit ml-auto'
+                            type='button'
+                            variant='destructive'
+                            disabled={isPending || isResetingInviteLink}
+                            onClick={handleLinkReset}
+                            >
+                               Reset Link
+                            </Button>
+                        </div>
+                    </CardContent>
+         </Card>
+
+         <Card className='w-full h-full border-none shadow-none dark:bg-neutral-900'>
+                    <CardContent className='p-7'>
+                        <div className="flex flex-col">
+                            <h3 className='font-bold'>Danger Zone</h3>
+                            <p className='text-muted-foreground text-sm'> Deleting a workspace is irreversible and will remove all asssociated data     
+                            </p>
+                            <DottedSeparator className='py-7'/>
+                            <Button 
+                            className='mt-6 w-fit ml-auto'
+                            type='button'
+                            variant='destructive'
+                            disabled={isPending || isDeletingWorkspace}
+                            onClick={handleDelete}
+                            >
+                                Delete Workspace
+                            </Button>
+                        </div>
+                    </CardContent>
+         </Card>
+
+    </div>
+  
   )
 }

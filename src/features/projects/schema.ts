@@ -5,3 +5,9 @@ export const createProjectSchema  = z.object({
     image: z.any().optional(), 
     workspaceId:z.string()
 })
+
+export const updateProjectSchema  = z.object({
+    name: z.string().trim().min(1,'Required').optional(),
+    image: z.any().optional(), 
+  
+})

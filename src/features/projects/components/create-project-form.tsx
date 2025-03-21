@@ -30,7 +30,7 @@ export function CreateProjectForm({onCancel}:CreateprojectFormProps) {
     const workspaceId = useGetWorkspaceId();
     const router = useRouter();
 
-    const {mutate, isPending} = useCreateProject();
+    const {mutate:createProject, isPending} = useCreateProject();
 
    
     const form = useForm({
@@ -52,12 +52,14 @@ export function CreateProjectForm({onCancel}:CreateprojectFormProps) {
 
       
                 
-            mutate(
+        createProject(
                 {
                     form: { ...values, workspaceId }
                 },
                 {
-                   
+                   onSuccess:({data})=>{
+                        router.push(`/workspaces/${workspaceId}/projects/${data[0].id}`)
+                   },
                     onError: (error) => {
                         console.error("Mutation error:", error);
                         toast.error(`Error: ${error.message}`);

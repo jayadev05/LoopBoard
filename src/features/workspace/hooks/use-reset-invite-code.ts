@@ -3,6 +3,7 @@
 import { client } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType,InferResponseType } from "hono";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 type ResponseType = InferResponseType <typeof client.api.workspace[':workspaceId']['reset-invite-code']['$post'],200>;
@@ -10,6 +11,7 @@ type ResponseType = InferResponseType <typeof client.api.workspace[':workspaceId
 type RequestType = InferRequestType<typeof client.api.workspace[':workspaceId']['reset-invite-code']['$post']>;
 
 export const useResetInviteCode =()=>{
+    const router = useRouter()
 
     const queryClient = useQueryClient();
 
@@ -26,6 +28,7 @@ export const useResetInviteCode =()=>{
         }  ,
         onSuccess:({data})=>{
             toast.success('Invite code reset succesfully');
+            router.refresh();
             queryClient.invalidateQueries({queryKey:['workspaces']});
             queryClient.invalidateQueries({queryKey:['workspaces',data[0].id]});
         }

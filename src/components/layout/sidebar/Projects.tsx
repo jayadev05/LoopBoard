@@ -31,8 +31,8 @@ export  function Projects() {
 
             return (
                 <Link href={href} key={project.id}>
-                    <div className={cn('flex items-center gap-2.5 p-2.5 rounded-md hover:opacity-50 transition cursor-pointer text-neutral-500',
-                        isActive ? 'bg-neutral-100 dark:bg-neutral-800 shadow-sm hover:opacity-100 text-primary' : ''
+                    <div className={cn('flex items-center gap-2.5 p-2.5 rounded-md hover:opacity-75 transition cursor-pointer text-neutral-500',
+                        isActive ? 'bg-neutral-200 dark:bg-neutral-800 shadow-sm hover:opacity-100 text-primary' : ''
                     )}>
                       <ProjectAvatar image={project.imageUrl || ''} name={project.name}/>
                         <span className='truncate'>{project.name}</span>

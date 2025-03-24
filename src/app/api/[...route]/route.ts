@@ -4,6 +4,7 @@ import customAuth from '@/features/auth/api/route'
 import workspace from '@/features/workspace/api/route'
 import members from '@/features/members/api/route'
 import projects from '@/features/projects/api/route'
+import tasks from '@/features/tasks/api/route'
 import { authMiddleware } from '../middleware/authMiddleware'
 
 const app = new Hono().basePath('/api')
@@ -16,6 +17,7 @@ const routes = app
     .route('/workspace',workspace)
     .route('/members',members)
     .route('/projects',projects)
+    .route('/tasks',tasks)
 
 
 export const POST = handle(app);

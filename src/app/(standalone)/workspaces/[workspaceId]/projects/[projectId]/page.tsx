@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/features/auth/actions";
 import { getProjectById } from "@/features/projects/actions";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useGetProjectId } from "@/features/projects/hooks/use-get-projectId";
+import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -44,6 +45,7 @@ export default async function ProjectIdPage({ params }: ProjectIdPageProps) {
           </Button>
         </div>
       </div>
+      <TaskViewSwitcher/>
     </div>
   );
 }

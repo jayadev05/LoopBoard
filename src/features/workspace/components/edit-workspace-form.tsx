@@ -128,7 +128,7 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
         <DeleteModal/>
         <ResetLinkModal/>
 
-          <Card className='w-full h-full border-none shadow-none bg-neutral-100 dark:bg-neutral-900' >
+          <Card className='w-full h-full border shadow-none  dark:bg-neutral-900' >
         <CardHeader className='flex p-7'>
             <CardTitle className='text-xl font-bold'>
                 {initialValues.name}
@@ -261,7 +261,7 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
         </CardContent>
          </Card>
 
-         <Card className='w-full h-full border-none shadow-none bg-neutral-100 dark:bg-neutral-900'>
+         <Card className='w-full h-full border shadow-none  dark:bg-neutral-900'>
                     <CardContent className='p-7'>
                         <div className="flex flex-col">
                             <h3 className='font-bold'>Invite Members</h3>
@@ -294,7 +294,7 @@ export  function EditWorkspaceForm({onCancel,initialValues}:EditWorkspaceFormPro
                     </CardContent>
          </Card>
 
-         <Card className='w-full h-full border-none shadow-none bg-neutral-100 dark:bg-neutral-900'>
+         <Card className='w-full h-full border shadow-none  dark:bg-neutral-900'>
                     <CardContent className='p-7'>
                         <div className="flex flex-col">
                             <h3 className='font-bold'>Danger Zone</h3>

@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
     pgTable,
     serial,
@@ -6,14 +7,13 @@ import {
     varchar,
     primaryKey,
     integer,
-    json,
-    boolean,
     uuid,
     pgEnum,
   } from "drizzle-orm/pg-core";
 
 
   export const roleEnum = pgEnum("role", [ "ADMIN", "MEMBER"]);
+  export const statusEnum = pgEnum("status", [ "BACKLOG", "TODO","IN_PROGRESS","IN_REVIEW","DONE"]);
   
   // Users table - compatible with both NextAuth and your custom auth
   export const users = pgTable("user", {
@@ -111,4 +111,29 @@ import {
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(), 
   });
+
+  export const tasks = pgTable("task", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: varchar("name", { length: 255 }).notNull(),
+    projectId: uuid("projectId")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    workspaceId: uuid("workspaceId")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    assigneeId: uuid("assigneeId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    description: varchar("description", { length: 255 }),
+    dueDate: timestamp("due_date"),
+    status: statusEnum("status").notNull().default("TODO"),
+    position: integer("position").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  }, (table) => ({
+    positionCheck: sql`CHECK (position >= 1000 AND position <= 1000000)`,
+  }));
+  
+
+
   

@@ -5,6 +5,7 @@ import { useCreateProjectModal } from '@/features/projects/hooks/use-create-proj
 import { useGetProjects } from '@/features/projects/hooks/use-get-projects';
 import { useGetWorkspaceId } from '@/features/workspace/hooks/use-get-workspaceId';
 import { cn } from '@/lib/utils';
+import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react'
@@ -17,7 +18,14 @@ export  function Projects() {
     const {open} = useCreateProjectModal();
 
     const workspaceId = useGetWorkspaceId();
-    const {data:response} = useGetProjects({workspaceId});
+    const {data,isPending} = useGetProjects({workspaceId});
+    
+    if(isPending){
+      return (
+        <Loader className='size-5 animate-spin text-muted-foreground'/>
+      )
+    }
+  
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -25,7 +33,7 @@ export  function Projects() {
             <p className="text-xs uppercase text-neutral-500 dark:text-neutral-300">Projects</p>
             <RiAddCircleFill onClick={open} className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition" />
           </div>
-          {response?.data.map(project=>{
+          {data!.map(project=>{
             const href =`/workspaces/${workspaceId}/projects/${project.id}`
             const isActive = pathname === href
 

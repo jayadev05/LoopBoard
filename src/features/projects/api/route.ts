@@ -41,7 +41,7 @@ const app = new Hono<{ Variables: Variables }>()
         .where(eq(projects.workspaceId, workspaceId))
         .orderBy(desc(projects.createdAt));
 
-      return c.json({ data: projectsData }, 200);
+      return c.json(projectsData, 200);
     }
   )
   .post("/", zValidator("form", createProjectSchema), async (c) => {

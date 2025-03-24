@@ -1,6 +1,8 @@
 import { DashboardHeader } from '@/components/layout/header/DashboardHeader'
 import { Sidebar } from '@/components/layout/sidebar/Sidebar'
 import { UserProfileButton } from '@/components/user-profile-button'
+import { CreateProjectModal } from '@/features/projects/components/create-project-modal'
+import { CreateTaskModal } from '@/features/tasks/components/create-task-modal'
 import { CreateWorkspaceModal } from '@/features/workspace/components/create-workspace-modal'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -13,6 +15,9 @@ interface StandaloneLayoutProps{
 export default function StandaloneLayout({children}:StandaloneLayoutProps) {
   return (
    <div className='min-h-screen '>
+            <CreateWorkspaceModal/>
+            <CreateProjectModal/>
+            <CreateTaskModal/>
          
            <div className="flex w-full h-full ">
    

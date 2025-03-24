@@ -36,7 +36,7 @@ const app = new Hono<{ Variables: Variables }>()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      return c.json({ data: { members } });
+      return c.json(members,200);
     }
   )
 

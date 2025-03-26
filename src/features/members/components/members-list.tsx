@@ -22,8 +22,8 @@ import { redirect, useRouter } from 'next/navigation';
 export default function MembersList() {
 
     const workspaceId = useGetWorkspaceId();
-    const {data:response}= useGetMembers({workspaceId});
-    console.log(response);
+    const {data:members}= useGetMembers({workspaceId});
+  
     const router = useRouter()
     
     const {mutate:updateMemberRole} = useUpdateMember();
@@ -96,7 +96,7 @@ export default function MembersList() {
             </div>
 
             <CardContent className='p-7'>
-               {response?.data.members?.map((m,index)=>(
+               {members?.map((m,index)=>(
                 <Fragment key={m.id}>
                     <div className='flex items-center gap-2'>
                         <MemberAvatar
@@ -142,7 +142,7 @@ export default function MembersList() {
                     </DropdownMenu>
                         
                     </div>
-                    {index < response.data.members.length-1 && (<Separator className='my-2'/>)}
+                    {index < members.length-1 && (<Separator className='my-2'/>)}
                 </Fragment>
                ))}
             </CardContent>

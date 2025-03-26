@@ -49,7 +49,7 @@ const app = new Hono<{ Variables: Variables }>()
     if (search) conditions.push(ilike(tasks.name, `%${search}%`)); 
     if (dueDate) conditions.push(eq(tasks.dueDate, dueDate));
 
-    const results = await db
+    const tasksData = await db
       .select({
         id: tasks.id,
         name: tasks.name,
@@ -73,7 +73,7 @@ const app = new Hono<{ Variables: Variables }>()
       .where(and(...conditions))
       .orderBy(desc(tasks.createdAt));
 
-      return c.json({data:results});
+      return c.json(tasksData);
 
     
 

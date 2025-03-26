@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useRef, useState } from 'react'
 import {  useForm } from 'react-hook-form'
 import { createTaskSchema } from '../schema';
-import { TypeOf, z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DottedSeparator } from '@/components/dotted-separator';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -16,6 +15,12 @@ import { cn } from '@/lib/utils';
 import { useGetWorkspaceId } from '@/features/workspace/hooks/use-get-workspaceId';
 import { useCreateTask } from '../hooks/use-create-task';
 import DatePicker from '@/components/date-picker';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MemberAvatar } from '@/features/members/components/member-avatar';
+import { TaskStatusEnum } from '@/types/tasks';
+import { ProjectAvatar } from '@/features/projects/components/project-avatar';
+import { useGetProjectId } from '@/features/projects/hooks/use-get-projectId';
+
 
 
 interface CreateprojectFormProps{
@@ -34,8 +39,12 @@ interface CreateprojectFormProps{
 
 export function CreateTaskForm({onCancel,projectOptions,memberOptions}:CreateprojectFormProps) {
 
-    const inputRef = useRef<HTMLInputElement | null>(null);
+ 
+    const projectId = useGetProjectId();
     const workspaceId = useGetWorkspaceId();
+
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
     const router = useRouter();
 
     const {mutate:createTask, isPending} = useCreateTask();
@@ -68,7 +77,7 @@ export function CreateTaskForm({onCancel,projectOptions,memberOptions}:Createpro
                 {
                    onSuccess:({data})=>{
                        form.reset();
-                       //Todo : redirect to task page
+                       router.push(`/workspaces/${workspaceId}/tasks/${data[0].id}`)
                    },
                    
                 }
@@ -119,9 +128,119 @@ export function CreateTaskForm({onCancel,projectOptions,memberOptions}:Createpro
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name="assigneeId"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Assignee</FormLabel>
+                                        <Select
+                                         defaultValue={field.value}
+                                         onValueChange={field.onChange}
+                                         >  
+                                           <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder='Select assignee'/>                                              
+                                            </SelectTrigger>
+                                            </FormControl>
+                                            <FormMessage/>
+                                            <SelectContent>
+                                                {memberOptions.map(m=>(
+                                                    <SelectItem key={m.id} value={m.id}>
+                                                        <div className='flex items-center gap-x-2'>
+                                                            <MemberAvatar 
+                                                            className='size-6'
+                                                            name={m.name!}/>
+                                                            {m.name}
+                                                        </div>
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                           
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="projectId"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Project</FormLabel>
+                                        <Select
+                                         defaultValue={field.value}
+                                         onValueChange={field.onChange}
+                                         >  
+                                           <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder='Select project'/>                                              
+                                            </SelectTrigger>
+                                            </FormControl>
+                                            <FormMessage/>
+                                            <SelectContent>
+                                                {projectOptions.map(p=>(
+                                                    <SelectItem key={p.id} value={p.id}>
+                                                        <div className='flex items-center gap-x-2'>
+                                                            <ProjectAvatar 
+                                                            className='size-6'
+                                                            name={p.name!}
+                                                            image={p.imageUrl ?? undefined}
+                                                            />
+                                                            {p.name}
+                                                        </div>
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                           
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="status"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Status</FormLabel>
+                                        <Select
+                                         defaultValue={field.value}
+                                         onValueChange={field.onChange}
+                                         >  
+                                           <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder='Select status'/>                                              
+                                            </SelectTrigger>
+                                            </FormControl>
+                                            <FormMessage/>
+                                            <SelectContent>
+                                                <SelectItem value={TaskStatusEnum.BACKLOG}>
+                                                    Backlog
+                                                </SelectItem>
+                                                <SelectItem value={TaskStatusEnum.IN_PROGRESS}>
+                                                    In Progress
+                                                </SelectItem>
+                                                <SelectItem value={TaskStatusEnum.IN_REVIEW}>
+                                                    In Review
+                                                </SelectItem>
+                                                <SelectItem value={TaskStatusEnum.TODO}>
+                                                    Todo
+                                                </SelectItem>
+                                                <SelectItem value={TaskStatusEnum.DONE}>
+                                                    Done
+                                                </SelectItem>
+                                               
+                                            </SelectContent>
+                                           
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                          
                         </div>
-                        <DottedSeparator className='py-7'/>
+                        <DottedSeparator className='py-4'/>
                         <div className="flex items-center justify-between">
                             <Button 
                                 type='button'

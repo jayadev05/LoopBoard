@@ -128,3 +128,9 @@
 .hide-scrollbar::--webkit-scrollbar{
   display: none;
 }
+
+[data-state="disabled"] {
+  color: #9ca3af !important; 
+  opacity: 0.5;
+  cursor: not-allowed;
+}

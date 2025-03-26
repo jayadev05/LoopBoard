@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import React from 'react'
 import {GoCheckCircle, GoCheckCircleFill, GoHome,GoHomeFill} from 'react-icons/go'
+import { RiSettings2Fill, RiSettings2Line, RiUser2Fill, RiUser2Line } from 'react-icons/ri';
 
 const routes =[
 
@@ -25,15 +26,16 @@ const routes =[
     {
         label:'Settings',
         href:'/settings',
-        icon:SettingsIcon,
-        activeIcon:SettingsIcon
+        icon:RiSettings2Line,
+        activeIcon:RiSettings2Fill
     },
     {
         label:'Members',
         href:'/members',
-        icon:UsersIcon,
-        activeIcon:UsersIcon
+        icon:RiUser2Line,
+        activeIcon:RiUser2Fill
     },
+  
 
 ]
 

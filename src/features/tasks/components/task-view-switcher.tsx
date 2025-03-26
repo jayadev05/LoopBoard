@@ -3,9 +3,13 @@
 import { DottedSeparator } from '@/components/dotted-separator'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {  PlusIcon } from 'lucide-react'
+import {  Loader, PlusIcon } from 'lucide-react'
 import React from 'react'
 import { useCreateTaskModal } from '../hooks/use-create-task-modal'
+import { useGetWorkspaceId } from '@/features/workspace/hooks/use-get-workspaceId';
+import { useGetTasks } from '../hooks/use-get-tasks';
+import { useQueryState } from 'nuqs';
+import DataFilters from './data-filters';
 
 type Props = {
 
@@ -13,10 +17,20 @@ type Props = {
 
 export default function TaskViewSwitcher({}: Props) {
 
+    const [view,setView] = useQueryState('task-view',{
+        defaultValue:'table'
+    })
+
+    const workspaceId = useGetWorkspaceId();
+    const {data:tasks,isPending:isLoadingTasks} = useGetTasks({workspaceId});
+
     const {open} = useCreateTaskModal();
 
   return (
-    <Tabs className='flex-1 w-full border rounded-lg '  >
+    <Tabs 
+    defaultValue={view}
+    onValueChange={setView}
+    className='flex-1 w-full border rounded-lg '  >
         <div className="h-full flex flex-col overflow-auto p-4">
             <div className="flex flex-col lg:flex-row justify-between items-center gap-y-2 ">
                 <TabsList className='w-full lg:w-auto' >
@@ -36,20 +50,26 @@ export default function TaskViewSwitcher({}: Props) {
                 </Button>
             </div>
             <DottedSeparator className='my-4'/>
-            {/*Add Filters*/}
-            Data Filters
+            <DataFilters/>
             <DottedSeparator className='my-4'/>
-            <>
+            {isLoadingTasks ? (
+                <div>
+                    <Loader className='size-5 animate-spin text-muted-foreground'/>
+                </div>
+            ) : (
+                <>
             <TabsContent value='table' className='mt-0'>
-                Data Table
+                {JSON.stringify(tasks)}
             </TabsContent>
             <TabsContent value='kanban' className='mt-0'>
-                Data Kanban
+                {JSON.stringify(tasks)}
             </TabsContent>
             <TabsContent value='calendar' className='mt-0'>
-                Data Calendar
+                {JSON.stringify(tasks)}
             </TabsContent>
             </>
+            )}
+            
         </div>
     </Tabs>
   )

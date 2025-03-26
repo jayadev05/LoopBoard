@@ -45,7 +45,7 @@ export  function CreateTaskFormWrapper({
   }));
 
   const memberOptions = members!.map((m) => ({
-    id: m.id,
+    id: m.userId,
     name: m.name,
   }));
 

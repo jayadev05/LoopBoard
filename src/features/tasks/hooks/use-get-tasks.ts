@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 import { InferResponseType } from "hono";
-import { Workspace } from "@/types/workspace";
+
 
 interface UseGetTasksProps {
     workspaceId:string;

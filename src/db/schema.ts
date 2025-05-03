@@ -125,7 +125,7 @@ import {
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     description: varchar("description", { length: 255 }),
-    dueDate: timestamp("due_date"),
+    dueDate: varchar("due_date", { length: 255 }).notNull(),
     status: statusEnum("status").notNull().default("TODO"),
     position: integer("position").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),

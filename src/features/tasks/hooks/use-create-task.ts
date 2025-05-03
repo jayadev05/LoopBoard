@@ -27,7 +27,7 @@ export const useCreateTask = () => {
     onSuccess: ({data}) => {
       toast.success('Task created');
       router.refresh()
-      queryClient.invalidateQueries({ queryKey: ['Tasks',data[0].projectId] });
+      queryClient.invalidateQueries({ queryKey: ['tasks',data[0].workspaceId] });
     }
   });
   

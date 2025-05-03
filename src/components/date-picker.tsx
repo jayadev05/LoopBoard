@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "./ui/calendar";
 
 interface DatePickerProps {
-  value: Date | undefined;
-  onChange: (date: Date) => void;
+  value: string | undefined;
+  onChange: (date: string | undefined) => void;
   classname?: string;
   placeholder?: string;
 }
@@ -34,27 +34,21 @@ export default function DatePicker({
           size="lg"
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(value, "PPP") : <span>{placeholder}</span>}
+          {value ? format(new Date(value), "PPP") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-       
-          
-      <Calendar
-        mode="single"
-        selected={value}
-        onSelect={(date) => onChange(date as Date)}
-        disabled={(date) => date < new Date()}
-        initialFocus
-        className="w-full rounded-md p-4"
-        classNames={{
-         
-          month: "mt-6 ",
-        
-        }}
-        
-      />
-          
+        <Calendar
+          mode="single"
+          selected={value ? new Date(value) : undefined}
+          onSelect={(date) => onChange(date ? date.toISOString() : undefined)}
+          disabled={(date) => date.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)}
+          initialFocus
+          className="w-full rounded-md p-4"
+          classNames={{
+            month: "mt-6",
+          }}
+        />
       </PopoverContent>
     </Popover>
   );

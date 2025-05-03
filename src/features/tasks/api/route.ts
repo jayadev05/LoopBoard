@@ -23,7 +23,7 @@ const app = new Hono<{ Variables: Variables }>()
       assigneeId:z.string().nullish(),
       status:z.nativeEnum(TaskStatusEnum).nullish(),
       search:z.string().nullish(),
-      dueDate:z.date().nullish()
+      dueDate:z.string().nullish()
     })
    )
   , async(c)=>{

@@ -26,8 +26,9 @@ export const useLogin =()=>{
               return await response.json();
         }  ,
         onSuccess:()=>{
-            toast.success('Login successfull');
+           
             router.push("/");
+            toast.success('Login successfull');
             queryClient.invalidateQueries({queryKey:['currentUser']});
         },
         onError: (error) => {

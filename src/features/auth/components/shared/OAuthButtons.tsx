@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { signIn } from "next-auth/react";
 import React from "react";
+import toast from "react-hot-toast";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
@@ -19,7 +20,8 @@ export function OAuthButtons({ type = "login" }: OAuthButtonProps) {
   const handleLogin =(provider : "google" | 'github')=>{
     signIn(provider,{
       callbackUrl:'/'
-    })
+    });
+    
   }
 
   return (

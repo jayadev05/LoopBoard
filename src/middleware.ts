@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 import { AUTH_COOKIES, AUTH_ROUTES } from "./features/auth/constants";
 import { ApplicationUser } from "./types/auth";
+import { getToken } from "next-auth/jwt";
 
 export const extractUserFromCookies = async (
   cookies: NextRequest['cookies']
@@ -31,10 +32,29 @@ export const extractUserFromCookies = async (
   
   // Fall back to NextAuth session
   if (nextAuthSessionToken) {
-    
-    return { 
-      isNextAuthLoggedIn: true 
-    } as ApplicationUser;
+    try {
+      const token = await getToken({
+        req: {
+          cookies: Object.fromEntries(
+            cookies.getAll().map(c => [c.name, c.value])
+          ),
+          headers: {}
+        } as any,
+        secret: process.env.NEXTAUTH_SECRET
+      });
+      
+      if (token) {
+        return {
+          id: token.sub,
+          email: token.email,
+          name: token.name,
+          role: token.role,
+        
+        } as ApplicationUser;
+      }
+    } catch (error) {
+      console.error("NextAuth token verification failed:", error);
+    }
   }
   
   return null;
@@ -49,36 +69,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   // Extract user from cookies
   let user = await extractUserFromCookies(req.cookies);
   
-  if (user?.isNextAuthLoggedIn) {
-    try {
-      // Include cookies in the fetch request
-      const sessionRes = await fetch(new URL('/api/auth/session', req.url), {
-        headers: {
-          cookie: req.headers.get('cookie') || ''
-        }
-      });
-      
-      if (sessionRes.ok) {
-        const session = await sessionRes.json();
-        
-        if (session && session.user) {
-          // Update user object with actual user data
-          user = {
-            ...user,
-            id: session.user.id,
-            email: session.user.email,
-            name: session.user.name,
-          };
-        } else {
-          console.log('Session received but no user data found:', session);
-        }
-      } else {
-        console.log('Session fetch failed with status:', sessionRes.status);
-      }
-    } catch (error) {
-      console.error('Error fetching session:', error);
-    }
-  }
+  
   
   // Handle protected routes
   if (isProtectedRoute && !user) {
